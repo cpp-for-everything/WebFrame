@@ -2,3 +2,7 @@
 	path = lib/inja
 	url = https://github.com/pantor/inja.git
 	branch = v3.3.0
+[submodule "lib/url-matcher"]
+	path = lib/url-matcher
+	url = https://github.com/PhD-with-C/RegexAhoCorasick
+	branch = 1.0.0.0

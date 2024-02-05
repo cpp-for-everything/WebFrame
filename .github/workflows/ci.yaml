@@ -39,20 +39,11 @@ jobs:
           - OFF
 
         exclude:
-          - os: windows-latest
+          - os: windows-2019
             compiler: gcc-11
-            generator: "Ninja Multi-Config"
-            build_type: Release
             
           - os: windows-2022
             compiler: gcc-11
-            generator: "Ninja Multi-Config"
-            build_type: Release
-            
-          - os: windows-2019
-            compiler: gcc-11
-            generator: "Ninja Multi-Config"
-            build_type: Release
 
           - os: ubuntu-22.04
             compiler: llvm-15.0.2

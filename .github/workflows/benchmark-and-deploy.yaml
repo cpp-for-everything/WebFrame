@@ -1,6 +1,7 @@
 run-name: Benchmark & Deploy / ${{ github.event.head_commit.message }}
 name: Benchmark & Deploy
 on:
+  workflow_call:
   workflow_dispatch:
   push:
   pull_request:

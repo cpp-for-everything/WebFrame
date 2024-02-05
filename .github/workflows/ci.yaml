@@ -17,7 +17,6 @@ env:
   CONAN_SYSREQUIRES_MODE: enabled
   CONAN_USER_HOME: "${{ github.workspace }}/conan-cache"
   CONAN_USER_HOME_SHORT: "${{ github.workspace }}/conan-cache/short"
-  CLANG_TIDY_VERSION: "15.0.2"
 
 jobs:
   builds:
@@ -27,9 +26,8 @@ jobs:
       matrix:
         os: [ubuntu-22.04, ubuntu-20.04, macos-13, macos-12, macos-11, windows-2022, windows-2019]
         compiler:
-          # you can specify the version after `-` like "llvm-15.0.2".
-          - llvm-15.0.2
-          - gcc-11
+          - llvm
+          - gcc
         generator:
           - "Ninja Multi-Config"
         build_type:
@@ -40,23 +38,23 @@ jobs:
 
         exclude:
           - os: windows-2019
-            compiler: gcc-11
+            compiler: gcc
             
           - os: windows-2022
-            compiler: gcc-11
+            compiler: gcc
 
           - os: ubuntu-22.04
-            compiler: llvm-15.0.2
+            compiler: llvm
             generator: "Ninja Multi-Config"
             build_type: Release
 
         include:
           # Add appropriate variables for gcov version required. This will intentionally break
           # if you try to use a compiler that does not have gcov set
-          - compiler: gcc-11
+          - compiler: gcc
             gcov_executable: gcov
 
-          - compiler: llvm-15.0.2
+          - compiler: llvm
             gcov_executable: "llvm-cov gcov"
 
           - os: ubuntu-20.04
@@ -123,13 +121,6 @@ jobs:
             inja: ON
 
     steps:
-      - name: Check for llvm version mismatches
-        if: ${{ contains(matrix.compiler, 'llvm') && !contains(matrix.compiler, env.CLANG_TIDY_VERSION) }}
-        uses: actions/github-script@v3
-        with:
-          script: |
-            core.setFailed('There is a mismatch between configured llvm compiler and clang-tidy version chosen')
-
       - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
@@ -148,14 +139,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.BUILD_TYPE }}
 
-      - name: Setup Cache
-        uses: ./.github/actions/setup_cache
-        with:
-          compiler: ${{ matrix.compiler }}
-          build_type: ${{ matrix.build_type }}
-          developer_mode: true
-          generator: ${{ matrix.generator }}
-
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1
         with:
@@ -166,7 +149,6 @@ jobs:
           conan: true
           vcpkg: false
           ccache: true
-          clangtidy: ${{ env.CLANG_TIDY_VERSION }}
           cppcheck: true
           gcovr: true
           opencppcoverage: true

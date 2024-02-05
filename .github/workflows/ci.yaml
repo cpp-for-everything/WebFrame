@@ -153,7 +153,7 @@ jobs:
         with:
           compiler: ${{ matrix.compiler }}
           build_type: ${{ matrix.build_type }}
-          developer_mode: trrue
+          developer_mode: true
           generator: ${{ matrix.generator }}
 
       - name: Setup Cpp

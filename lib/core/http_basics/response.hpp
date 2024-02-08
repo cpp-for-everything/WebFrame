@@ -1,5 +1,6 @@
 #pragma once
 #include "../core.hpp"
+#include "status_line.hpp"
 #include <map>
 #include <string>
 

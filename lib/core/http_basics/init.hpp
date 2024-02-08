@@ -93,8 +93,8 @@ namespace webframe::core
 			(m == method::TRACE) ? "TRACE" :
 			(m == method::PATCH) ? "PATCH" :
 			([]() -> const char* {
-			throw std::invalid_argument("Not valid METHOD Type");
-				})();
+				throw std::invalid_argument("Not valid METHOD Type");
+			})();
 	}
 
 	constexpr bool strings_equal(char const* a, char const* b) {

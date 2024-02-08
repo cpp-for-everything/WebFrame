@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-add_subdirectory(Catch2-3.1.1)
+add_subdirectory(Catch2)
 
 add_executable(Core-Tests main.cpp)
 target_include_directories(Core-Tests PUBLIC "${PROJECT_SOURCE_DIR}/tests")

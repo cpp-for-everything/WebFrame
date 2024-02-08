@@ -44,9 +44,8 @@ int main()
 			}
 			return "Hello World!";
 		})
-		.route("/{number}/3", [&]([[maybe_unused]] int steps) {
+		.route("/{number}/3", [&]([[maybe_unused]] int steps) -> std::string {
 			throw std::logic_error("asdf");
-			return "asdf";
 		})
 		.route("/{number}/4", [&]([[maybe_unused]] const webframe::core::body_t& request_body, [[maybe_unused]] int steps) {
 			return "asdf";
@@ -58,6 +57,6 @@ int main()
 			return "asdf";
 		});
 	const char* port = "8889";
-	const unsigned char cores = ((std::thread::hardware_concurrency() - 1 > 0) ? (std::thread::hardware_concurrency() - 1) : 1);
+	const unsigned int cores = ((std::thread::hardware_concurrency() - 1 > 0) ? (std::thread::hardware_concurrency() - 1) : 1);
 	app.run(port, cores).wait_end(port);
 }

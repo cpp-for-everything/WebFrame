@@ -657,6 +657,7 @@ namespace mime_types
         }
 
         static_assert(true, "Extention is not in the list of MIME types.");
+        throw std::invalid_argument("Unsupported file extension.");
     }
 
     constexpr std::string_view get_mime_type(const char* ext)

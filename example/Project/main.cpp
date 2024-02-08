@@ -16,7 +16,7 @@ int main([[maybe_unused]] int args, [[maybe_unused]] char** argv) {
     
     // start
 	const char* port = "8889";
-	const unsigned char cores = ((std::thread::hardware_concurrency() - 1 > 0) ? (std::thread::hardware_concurrency() - 1) : 1);
+	const unsigned int cores = ((std::thread::hardware_concurrency() - 1 > 0) ? (std::thread::hardware_concurrency() - 1) : 1);
 	app.run(port, cores).wait_end(port);
     return 0;
 }

@@ -9,14 +9,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	std::atomic<long long> pass{fasten};
 	webframe::core::application app;
 	app.route("/{number}/2", [&](long long steps) {
-			for (long long i = 0; i < (1 << steps); i++)
+			for (unsigned long long i = 0; i < (1ull << steps); i++)
 			{
 				pass.fetch_add(rand(), std::memory_order_relaxed);
 			}
 			return "Hello World!";
 		})
 		.route("/{number}/1", [&](long long steps) {
-			for (long long i = 0; i < (1 << steps); i++)
+			for (unsigned long long i = 0; i < (1ull << steps); i++)
 			{
 				pass.fetch_add(1, std::memory_order_relaxed);
 			}

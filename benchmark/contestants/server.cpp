@@ -9,7 +9,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	long long pass = fasten;
 	webframe::core::application app;
 	app.route("/{number}/2", [&](long long steps) {
-			for (long long i = 0; i < (1 << steps); i++)
+			for (long long i = 0; i < (1ull << steps); i++)
 			{
 				pass = pass + rand();
 			}
@@ -17,7 +17,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		})
 		.route("/{number}/1", [&](long long steps) {
 			volatile unsigned long long int test = 0;
-			for (long long i = 0; i < (1 << steps); i++)
+			for (long long i = 0; i < (1ull << steps); i++)
 			{
 				test++;
 			}

@@ -40,10 +40,11 @@ endif()
 
 # Include sub-projects.
 if(USE_INJA)
+    set(INJA_BUILD_TESTS OFF CACHE INTERNAL "disables the inja tests" FORCE)
     add_subdirectory("lib/inja")
     set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/inja" APPEND PROPERTY VARIABLE BUILD_TESTING OFF)
     add_definitions(-DUSE_INJA)
-    list(APPEND EXTRA_LIBS single_inja)
+    list(APPEND EXTRA_LIBS pantor::inja)
 endif()
 
 add_subdirectory("lib/url-matcher")
@@ -54,7 +55,6 @@ set_target_properties(Core PROPERTIES LINKER_LANGUAGE CXX)
 install(TARGETS Core DESTINATION ${PROJECT_BINARY_DIR})
 
 if(RUN_TESTS)
-    set(INJA_BUILD_TESTS OFF)
     include(CTest)
     enable_testing()
     add_subdirectory("tests/")

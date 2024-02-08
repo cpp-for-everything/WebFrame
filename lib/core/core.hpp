@@ -632,7 +632,7 @@ namespace webframe::core
 
 				int status;
 				struct addrinfo hints, * res;
-				int listener;
+				SOCKET listener;
 
 				// Before using hint you have to make sure that the data structure is empty 
 				memset(&hints, 0, sizeof hints);
@@ -656,8 +656,8 @@ namespace webframe::core
 				}
 
 				// Create Socket and check if error occured afterwards
-				listener = static_cast<int>(socket(res->ai_family, res->ai_socktype, res->ai_protocol));
-				if (listener == -1)
+				listener = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+				if (listener == (SOCKET)-1)
 				{
 					this->errors << "(main) socket error: " << gai_strerror(status) << "\n";
 					webframe::core::_application::port_status.alert_start(PORT);
@@ -718,8 +718,8 @@ namespace webframe::core
 
 					// Accept a request
 					SOCKET client = -1;
-					client = static_cast<SOCKET>(ACCEPT(listener, NULL, NULL));
-					if (static_cast<int>(client) == -1)
+					client = ACCEPT(listener, NULL, NULL);
+					if (client == (SOCKET)-1)
 					{
 						continue;
 					}

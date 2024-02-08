@@ -105,10 +105,10 @@ namespace webframe::core
 					loading == LoadingState::PARAM_VALUE)
 				{
 					std::string var = "", val = "";
-					std::string* x;
+					std::string* x = nullptr;
 					if (loading == LoadingState::PARAM_VALUE) x = &var;
 					if (loading == LoadingState::PARAM_KEY) x = &val;
-
+					if (x == nullptr) { throw std::exception("Null pointer exception."); }
 					for (; i < n; i++)
 					{
 						if (buff[i] == '=')

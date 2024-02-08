@@ -262,16 +262,16 @@ void * get_in_addr(struct sockaddr * sa)
 /// <returns>	True if it is already done. </returns>
 ///=================================================================================================
 
-bool WinsockInitialized()
-{
-	SOCKET s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (s == INVALID_SOCKET && WSAGetLastError() == WSANOTINITIALISED) {
-		return false;
-	}
-
-	closesocket(s);
-	return true;
-}
+//bool WinsockInitialized()
+//{
+//	SOCKET s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+//	if (s == INVALID_SOCKET && WSAGetLastError() == WSANOTINITIALISED) {
+//		return false;
+//	}
+//
+//	closesocket(s);
+//	return true;
+//}
 #endif
 
 #endif /* __HOST_H__ */
@@ -281,20 +281,20 @@ int nonblock_config(SOCKET s) {
   u_long iMode = 1;
   return ioctlsocket(s, FIONBIO, &iMode);
 }
-int block_config(SOCKET socket)
-{
-  u_long iMode = 0;
-  return ioctlsocket(socket, FIONBIO, &iMode);
-}
+//int block_config(SOCKET socket)
+//{
+//  u_long iMode = 0;
+//  return ioctlsocket(socket, FIONBIO, &iMode);
+//}
 #endif
 #if !defined(_WIN32) && (defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)))
 int nonblock_config(SOCKET s) {
   return fcntl(s, F_SETFL, O_NONBLOCK);
 }
-int block_config(SOCKET socket)
-{
-  const int flags = fcntl(socket, F_GETFL, 0);
-  if (!(flags & O_NONBLOCK)) { return 0; }
-  return fcntl(socket, F_SETFL, flags ^ O_NONBLOCK);
-}
+//int block_config(SOCKET socket)
+//{
+//  const int flags = fcntl(socket, F_GETFL, 0);
+//  if (!(flags & O_NONBLOCK)) { return 0; }
+//  return fcntl(socket, F_SETFL, flags ^ O_NONBLOCK);
+//}
 #endif

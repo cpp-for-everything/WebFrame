@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../http_basics/init.hpp"
+#include "../http/processing/path_variables.hpp"
+#include "../http/response/response.hpp"
 #include <functional>
 
-namespace webframe::core {
+namespace webframe::utils {
 struct body_t {
 private:
   std::string body;
@@ -17,8 +18,8 @@ struct responser {
 public:
   responser() {}
 
-  std::function<response(const std::string &, const std::string &,
-                         const path_vars &)>
+  std::function<webframe::core::response(const std::string &, const std::string &,
+                         const webframe::core::path_vars &)>
       call;
 
   template <typename Ret, typename... Ts>
@@ -34,15 +35,15 @@ public:
   template <typename Ret> explicit responser(std::function<Ret()> f) {
     call = [=](const std::string &http,
                [[maybe_unused]] const std::string &body,
-               [[maybe_unused]] const path_vars &vars) -> response {
-      return response(http, f());
+               [[maybe_unused]] const webframe::core::path_vars &vars) -> webframe::core::response {
+      return webframe::core::response(http, f());
     };
   }
 
   template <typename Ret> explicit responser(std::function<Ret(body_t)> f) {
     call = [=](const std::string &http, const std::string &body,
-               [[maybe_unused]] const path_vars &vars) -> response {
-      return response(http, f(body));
+               [[maybe_unused]] const webframe::core::path_vars &vars) -> webframe::core::response {
+      return webframe::core::response(http, f(body));
     };
   }
 
@@ -52,8 +53,8 @@ private:
                         [[maybe_unused]] std::index_sequence<I...> seq) {
     call = [=](const std::string &http,
                [[maybe_unused]] const std::string &body,
-               const path_vars &vars) -> response {
-      return response(http, f((Ts(vars[I]))...));
+               const webframe::core::path_vars &vars) -> webframe::core::response {
+      return webframe::core::response(http, f((Ts(vars[I]))...));
     };
   }
 
@@ -61,11 +62,9 @@ private:
   void set_with_body(std::function<Ret(body_t, Ts...)> f,
                      [[maybe_unused]] std::index_sequence<I...> seq) {
     call = [=](const std::string &http, const std::string &body,
-               const path_vars &vars) -> response {
-      return response(http, f(body, (Ts(vars[I]))...));
+               const webframe::core::path_vars &vars) -> webframe::core::response {
+      return webframe::core::response(http, f(body, (Ts(vars[I]))...));
     };
   }
-
-  friend class application;
 };
-} // namespace webframe::core
+} // namespace webframe::utils

@@ -29,37 +29,7 @@ option(RUN_TESTS "Run unit & integration tests" ON)
 
 configure_file(Core.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/lib/core/Core-version.hpp)
 
-if (WIN32)
-    list(APPEND EXTRA_LIBS wsock32 ws2_32)
-endif()
-
-find_package(Threads REQUIRED)
-list(APPEND EXTRA_LIBS ${CMAKE_THREAD_LIBS_INIT})
-
-if(CMAKE_USE_PTHREADS_INIT) 
-    add_definitions(-DUSE_PTHREAD)
-endif()
-
-# Include sub-projects.
-if(USE_INJA)
-    set(INJA_BUILD_TESTS OFF CACHE INTERNAL "disables the inja tests" FORCE)
-    add_subdirectory("lib/inja")
-    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib/inja" APPEND PROPERTY VARIABLE BUILD_TESTING OFF)
-    set_target_properties(inja PROPERTIES COMPILE_FLAGS ${DEPENDANCES_WARNING_LEVEL})
-    add_definitions(-DUSE_INJA)
-    list(APPEND EXTRA_LIBS pantor::inja)
-endif()
-
-add_subdirectory("lib/url-matcher")
-set_target_properties(regexmatcher_core PROPERTIES COMPILE_FLAGS ${DEPENDANCES_WARNING_LEVEL})
-
-list(APPEND EXTRA_LIBS RegexMatcher::core)
-
-add_library(Core STATIC "lib/core/core.cpp")
-target_link_libraries(Core PUBLIC ${EXTRA_LIBS})
-target_include_directories(Core INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/lib")
-set_target_properties(Core PROPERTIES LINKER_LANGUAGE CXX)
-install(TARGETS Core DESTINATION ${PROJECT_BINARY_DIR})
+add_subdirectory(lib/)
 
 if(RUN_TESTS)
     include(CTest)

@@ -1,5 +1,5 @@
 /**
- *  @file   http_codes.hpp
+ *  @file   codes.hpp
  *  @brief  Utils for all possible HTTP response codes
  *  @author Alex Tsvetanov
  *  @date   2022-03-07
@@ -9,6 +9,7 @@
 
 #include "constexpr.hpp"
 #include <string_view>
+#include <array>
 
 namespace http_codes {
 /**
@@ -40,7 +41,7 @@ constexpr std::array<std::array<std::string_view, 18>, 6> codes = {{
  *  @brief   Transforms HTTP code into HTTP response message
  *  @param   code The HTTP code which's message is requested as integer
  ***********************************************/
-constexpr std::string_view get_reason_by_code(unsigned int code) {
+constexpr inline std::string_view get_reason_by_code(unsigned int code) {
   return codes[code / 100][code % 100];
 }
 
@@ -48,7 +49,7 @@ constexpr std::string_view get_reason_by_code(unsigned int code) {
  *  @brief   Transforms HTTP code to HTTP response message
  *  @param   code_str The HTTP code which's message is requested as a string
  ***********************************************/
-constexpr std::string_view
+constexpr inline std::string_view
 get_reason_by_code(const std::string_view &code_str) {
   return get_reason_by_code(webframe::_compile_time::string_to_uint(code_str));
 }

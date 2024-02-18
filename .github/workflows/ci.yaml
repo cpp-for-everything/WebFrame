@@ -100,7 +100,6 @@ jobs:
             developer_mode: OFF
             package_generator: ZIP
 
-
     steps:
       - name: Check for llvm version mismatches
         if: ${{ contains(matrix.compiler, 'llvm') && !contains(matrix.compiler, env.CLANG_TIDY_VERSION) }}

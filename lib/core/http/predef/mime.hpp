@@ -8,6 +8,7 @@
 #pragma once
 
 #include <string_view>
+#include <stdexcept>
 
 namespace mime_types {
 constexpr std::string_view mime_types[][2] = {

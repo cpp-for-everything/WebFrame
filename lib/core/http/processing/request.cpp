@@ -1,57 +1,29 @@
 /**
- *  @file   base.hpp
- *  @brief  Basic utils to handle web requests and reponses
- *  @author Alex Tsvetanov
- *  @date   2022-03-07
- ***********************************************/
-
-#pragma once
-
-#include "../core.hpp"
-#include "../http_consts/codes.hpp"
-#include "../http_consts/mime.hpp"
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <regex>
-#include <stdexcept>
-#include <string>
-#include <utility>
+ * @file request.cpp
+ * @author Alex Tsvetanov
+ * @brief Request class implementation
+ * @version 0.1
+ * @date 2024-02-13
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+#include "request.hpp"
 
 namespace webframe::core {
-/**
- *  @brief   Type of the request
- *  @details This type represents the HTTP version, the URL, the URL variables,
- *all headers, and the body of the request
- *  @see     webframe::path_vars
- ***********************************************/
-class request {
-private:
-  LoadingState loading;
-  std::string remaining_to_parse;
-
-public:
-  method m;
-  std::string uri;
-  req_vars request_params;
-  std::string http;
-  std::map<std::string, std::string> header;
-  std::string body;
-
-public:
-  request()
+  request::request()
       : loading(LoadingState::NOT_STARTED), remaining_to_parse(""),
         m(method::undefined), uri(""), request_params({}), http(""), header({}),
         body("") {}
 
-  request(method _m, const std::string &h,
+  request::request(method _m, const std::string &h,
           const std::map<std::string, std::string> &m, const std::string &_body)
       : loading(LoadingState::NOT_STARTED), m(_m), http(h), header(m),
         body(_body) {}
 
-  LoadingState getState() const { return loading; }
+  LoadingState request::getState() const { return loading; }
 
-  LoadingState loadMore(const char *buff, const size_t n) {
+  LoadingState request::loadMore(const char *buff, const size_t n) {
     if (n != 0) {
       size_t i = 0;
       if (loading == LoadingState::NOT_STARTED) {
@@ -104,7 +76,7 @@ public:
             x = &val;
             continue;
           }
-          if (buff[i] == '&' or buff[i] == ' ') {
+          if (buff[i] == '&' || buff[i] == ' ') {
             (*x) = std::move(remaining_to_parse);
             remaining_to_parse.clear();
             loading = LoadingState::PARAM_VALUE;
@@ -123,7 +95,7 @@ public:
       if (loading == LoadingState::HTTP_IN_PROGRESS) {
         // skip " HTTP/" to reach "1.1"
         for (;
-             i < n and !(buff[i] >= '0' and buff[i] <= '9') and buff[i] != '.';
+             i < n && !(buff[i] >= '0' && buff[i] <= '9') && buff[i] != '.';
              i++) {
         }
         // read version
@@ -170,7 +142,7 @@ public:
         body =
             std::move(remaining_to_parse) + std::string((char *)(buff + i + 1));
         remaining_to_parse.clear();
-        if (header.find("Content-Length") == header.end() or
+        if (header.find("Content-Length") == header.end() ||
             body.size() >=
                 (unsigned long long)atoll(header["Content-Length"].c_str()))
           loading = LoadingState::LOADED;
@@ -178,5 +150,5 @@ public:
     }
     return loading;
   }
-};
+
 } // namespace webframe::core

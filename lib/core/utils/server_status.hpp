@@ -6,10 +6,10 @@
  ***********************************************/
 
 #pragma once
-#include "../http_consts/constexpr.hpp"
+#include "../http/predef.hpp"
 #include <shared_mutex>
 
-namespace webframe {
+namespace webframe::utils {
 class server_status {
 public:
   server_status() {
@@ -91,4 +91,4 @@ private:
     this->dead[_compile_time::string_to_uint(PORT)]->unlock();
   }
 };
-} // namespace webframe
+} // namespace webframe::utils

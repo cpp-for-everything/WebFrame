@@ -30,7 +30,7 @@ namespace webframe::core {
 	class application {
 	private:
 		std::vector<executor_data> executors;
-		RegexMatcher<std::vector, executor_data> routes;
+		RegexMatcher<executor_data> routes;
 
 #ifdef USE_INJA
 		std::string template_dir;

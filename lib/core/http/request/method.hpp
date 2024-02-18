@@ -2,6 +2,7 @@
 
 #include <string_view>
 #include <string>
+#include <cstring>
 #include <stdexcept>
 
 using namespace std::literals::string_view_literals;

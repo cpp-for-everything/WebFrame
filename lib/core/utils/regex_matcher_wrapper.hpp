@@ -1,16 +1,16 @@
 #pragma once
 
 #include <optional>
+#include <vector>
 #include <matcher/core.hpp>
-#include <iostream>
 
 namespace webframe::core
 {
-    template<template<typename> class RegexContainer, typename RegexData>
+    template<typename RegexData>
     class RegexMatcher : private matcher::RegexMatcher<size_t, char> {
-        const RegexContainer<RegexData>* container;
+        const std::vector<RegexData>* container;
     public:
-        RegexMatcher(RegexContainer<RegexData>* container) : matcher::RegexMatcher<size_t, char>() {
+        RegexMatcher(std::vector<RegexData>* container) : matcher::RegexMatcher<size_t, char>() {
             this->container = container;
         }
         void add_regex(std::string regex, size_t index) {

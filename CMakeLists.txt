@@ -15,10 +15,12 @@ if(OPTIMIZATION)
 endif()
 
 if (MSVC)
+    add_compile_options(/await)
     list(APPEND PROJECT_WARNING_LEVEL "/W4")
     list(APPEND DEPENDANCES_WARNING_LEVEL "/W0")
 else()
     # lots of warnings
+    add_compile_options(-fcoroutines)
     list(APPEND PROJECT_WARNING_LEVEL "-Wall" "-Wextra" "-pedantic")
     list(APPEND DEPENDANCES_WARNING_LEVEL "-w")
 endif()

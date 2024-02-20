@@ -1,6 +1,11 @@
 #pragma once
 
 #include "../../core.hpp"
+#include "../exceptions/socket_not_created.hpp"
+#include "../exceptions/unable_to_bind_to_socket.hpp"
+#include "../exceptions/unable_to_retrieve_address.hpp"
+#include <coroutine>
+#include <optional>
 
 namespace {
     using route_variables_container = std::vector<std::string>;
@@ -98,10 +103,11 @@ namespace webframe::core {
 	private:
 		int responder(SOCKET socket);
 		void handler(SOCKET client, const std::function<void()>& callback);
-
+		bool initialized_sockets();
+		SOCKET get_listener(const char* PORT);
+		utils::generator<SOCKET> gen_clients(SOCKET listener, const char* PORT, std::shared_ptr<std::optional<size_t>> requests);
 	public:
-		application& run(const char* PORT, const unsigned int cores,
-		                  bool limited = false, int requests = -1);
+		application& run(const char* PORT, const size_t cores, std::optional<size_t> requests = std::nullopt);
 
 		static void wait_start(const char* PORT);
 

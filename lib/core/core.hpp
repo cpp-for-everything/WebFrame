@@ -46,6 +46,7 @@
 #include "utils/lambda2function.hpp"
 #include "utils/respond_manager.hpp"
 #include "utils/server_status.hpp"
+#include "utils/generator.hpp"
 
 using namespace std::literals::string_literals;
 

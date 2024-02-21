@@ -1,14 +1,23 @@
 #pragma once
 
+#ifdef __CLANG__
 #include <experimental/coroutine>
-
+namespace coro_std {
+    using namespace std::experimental;
+}
+#else
+#include <coroutine>
+namespace coro_std {
+    using namespace std;
+}
+#endif
 namespace webframe::utils {
 
     template<typename T>
     struct generator {
         
         struct promise_type;
-        using handle_type = std::experimental::coroutine_handle<promise_type>;
+        using handle_type = coro_std::coroutine_handle<promise_type>;
         
         generator(handle_type h): coro(h) {}                     
 
@@ -36,17 +45,17 @@ namespace webframe::utils {
             
             ~promise_type() {}
             
-            std::experimental::suspend_always initial_suspend() {            
+            coro_std::suspend_always initial_suspend() {            
                 return {};
             }
-            std::experimental::suspend_always final_suspend() noexcept {
+            coro_std::suspend_always final_suspend() noexcept {
                 return {};
             }
             auto get_return_object() {      
                 return generator{handle_type::from_promise(*this)};
             }
         
-            std::experimental::suspend_always yield_value(const T value) {    
+            coro_std::suspend_always yield_value(const T value) {    
                 current_value = value;
                 return {};
             }

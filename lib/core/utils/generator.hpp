@@ -1,18 +1,12 @@
 #pragma once
 
-#ifdef __clang__
-#include <experimental/coroutine>
+#ifndef __cpp_lib_coroutine
+    #include <experimental/coroutine>
+    namespace coro_std = std::experimental;
 #else
-#include <coroutine>
+    #include <coroutine>
+    namespace coro_std = std;
 #endif
-
-namespace coro_std {
-    #ifdef __clang__
-    using namespace std::experimental;
-    #else
-    using namespace std;
-    #endif
-}
 
 namespace webframe::utils {
 

@@ -19,23 +19,20 @@ namespace webframe::core {
 			});
 	}
 	constexpr bool application::initHttpCodes([[maybe_unused]] const unsigned int code) {
-		/*std::visit([](auto code) {
-				constexpr auto [[maybe_unused]] _1 =
-		http_codes::get_reason_by_code(_compile_time::codes[code]);
-		constexpr auto
-		[[maybe_unused]] _2 =
-		http_codes::get_reason_by_code(_compile_time::strCodes[code]);
-		}, _compile_time::var_index<_compile_time::codes.size()>(code));
+		/*std::visit(
+                    [](auto code) {
+                            constexpr auto [[maybe_unused]] _1 = http_codes::get_reason_by_code(_compile_time::codes[code]);
+                            constexpr auto [[maybe_unused]] _2 = http_codes::get_reason_by_code(_compile_time::strCodes[code]);
+                    },
+                    _compile_time::var_index<_compile_time::codes.size()>(code));
 
-		return (code + 1 >= _compile_time::codes.size()) ? true :
-		initHttpCodes(code
-		+ 1);
+		return (code + 1 >= _compile_time::codes.size()) ? true : initHttpCodes(code + 1);
 		*/
+		
 		return true;
 	}
 	constexpr bool application::init() {
-		static_assert(mime_types::get_mime_type(".zip").size() > 0,
-						"mime_types were not initialized.");
+		static_assert(mime_types::get_mime_type(".zip").size() > 0, "mime_types were not initialized.");
 
 		// static_assert(method_to_string(method::GET) == "GET"sv);
 		// static_assert(method_to_string(method::HEAD) == "HEAD"sv);
@@ -56,9 +53,7 @@ namespace webframe::core {
 		// static_assert(string_to_method("TRACE") == method::TRACE);
 		// static_assert(string_to_method("PATCH") == method::PATCH);
 
-		static_assert(
-			initHttpCodes(),
-			"The initiation of HTTP code and their reasons failed");
+		static_assert(initHttpCodes(),"The initiation of HTTP code and their reasons failed");
 
 		return true;
 	}

@@ -11,7 +11,7 @@ namespace webframe::core {
 			size_t size;
 			std::shared_ptr<utils::generator<SOCKET>> client_getter;
 			std::shared_ptr<std::optional<size_t>> requests;
-			std::vector<std::jthread> threads;
+			std::vector<std::thread> threads;
 		public:
 			template<typename T>
 			explicit thread_pool(size_t _size, std::shared_ptr<utils::generator<SOCKET>> getter, T worker, std::shared_ptr<std::optional<size_t>> requests) {
@@ -20,19 +20,13 @@ namespace webframe::core {
 				this->requests = requests;
 				this->threads.reserve(this->size);
 				for (size_t i = 0 ; i < this->size ; i ++) {
-					this->threads.push_back(std::jthread(worker, this->client_getter, this->requests));
+					this->threads.push_back(std::thread(worker, this->client_getter, this->requests));
 				}
 			}
 			
 			void start() {
 				for (size_t i = 0 ; i < this->size ; i ++) {
 					this->threads[i].detach();
-				}
-			}
-
-			void stop() {
-				for (size_t i = 0 ; i < this->size ; i ++) {
-					this->threads[i].request_stop();
 				}
 			}
 		};

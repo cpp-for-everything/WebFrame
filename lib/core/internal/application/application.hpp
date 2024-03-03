@@ -114,8 +114,6 @@ namespace webframe::core {
 
 		static void request_stop(const char* PORT);
 
-		static void reset(const char* PORT);
-
 	protected:
 		static webframe::utils::server_status port_status;
 

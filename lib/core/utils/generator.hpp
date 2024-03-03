@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef __cpp_lib_coroutine
+#if (!defined(__cpp_lib_coroutine) && !defined(__cpp_impl_coroutine))
     #include <experimental/coroutine>
     namespace coro_std = std::experimental;
 #else

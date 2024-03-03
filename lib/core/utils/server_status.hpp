@@ -8,102 +8,95 @@
 #pragma once
 #include "../http/predef.hpp"
 #include <shared_mutex>
+#include <condition_variable>
 
 namespace webframe::utils {
 class server_status {
 public:
-  server_status() {
-    for (int i = 0; i < 65536; i++) {
-      start[i] = dead[i] = nullptr;
-    }
-  }
+	server_status() { }
+	
+	class port {
+	public:
+		enum Status : short {
+			NOT_STARTED = 0,
+			STARTED,
+			RUNNING,
+			SIGNALED,
+			STOPPED
+		};
+		
+		Status status;
+		std::shared_ptr<std::mutex> m;
+		std::condition_variable cv;
+		std::shared_ptr<std::optional<size_t>> number_of_requests;
+		
+		port() {
+			status = Status::NOT_STARTED;
+			m = std::make_shared<std::mutex>();
+			number_of_requests = nullptr;
+		}
 
-private:
-  using mutex = std::mutex;
-  
-  std::shared_ptr<mutex> start[65536];
-  std::shared_ptr<mutex> dead[65536];
-  std::shared_ptr<std::optional<size_t>> number_of_requests[65536];
+		void change_status(Status s) {
+			std::unique_lock lk(*m);
+			this->status = s;
+			lk.unlock();
+			this->cv.notify_all();
+		}
 
+		bool is_started() {
+			return this->status == port::Status::STARTED;
+		}
+		bool is_stopped() {
+			return this->status == port::Status::STOPPED;
+		}
+		
+		inline void wait_to_start() {
+			std::unique_lock lk(*m);
+			cv.wait(lk, [this](){ return this->is_started(); });
+		}
+
+		inline void wait_to_stop() {
+			std::unique_lock lk(*m);
+			cv.wait(lk, [this](){ return this->is_stopped(); });
+		}
+	};
+
+private:	
+	port ports[65536];
 public:
-  void initiate(const char *PORT, std::optional<size_t> requests = std::nullopt) {
-    if (this->get_start_ptr(PORT))
-      throw std::ios_base::failure("start mutex is not cleaned up");
-    if (this->get_end_ptr(PORT))
-      throw std::ios_base::failure("end mutex is not cleaned up");
-    this->get_start_ptr(PORT) = std::make_shared<mutex>();
-    this->get_end_ptr(PORT) = std::make_shared<mutex>();
-    this->get_number_of_requests_ptr(PORT) = std::make_shared<std::optional<size_t>>(requests);
-    this->lock_working(PORT);
-    this->lock_dead(PORT);
-  }
+	void initiate(const char *PORT, std::optional<size_t> requests = std::nullopt) {
+		if (ports[number(PORT)].status == port::Status::RUNNING || ports[number(PORT)].status == port::Status::STARTED || ports[number(PORT)].status == port::Status::SIGNALED)
+			throw "The port is already/still in-use";
+		ports[number(PORT)].number_of_requests = std::make_shared<std::optional<size_t>>(requests);
+		change_status(PORT, port::Status::STARTED);
+	}
 
-  void alert_start(const char *PORT) { this->unlock_working(PORT); }
+	inline void change_status(const char *PORT, port::Status s) {
+		ports[number(PORT)].change_status(s);
+	}
 
-  void alert_end(const char *PORT) {
-    if (this->get_remaining_number_of_requests(PORT).has_value()) 
-      this->get_remaining_number_of_requests(PORT).value() = 0;
-    else
-      this->get_remaining_number_of_requests(PORT) = std::make_optional<size_t>(0);
-  }
+	inline port::Status get_status(const char *PORT) {
+		return ports[number(PORT)].status;
+	}
 
-  void wait_end(const char *PORT) {
-    this->unlock_dead(PORT);
-  }
+	inline void wait_to_start(const char *PORT) {
+		ports[number(PORT)].wait_to_start();
+	}
 
-  bool is_over(const char *PORT) {
-    bool locked = this->get_end(PORT).try_lock();
-    if (!locked)
-      return false;
-    this->get_end(PORT).unlock();
-    return true;
-  }
+	inline void wait_to_stop(const char *PORT) {
+		ports[number(PORT)].wait_to_stop();
+	}
 
-  std::optional<size_t> &get_remaining_number_of_requests(const char *PORT) {
-    return *this->number_of_requests[_compile_time::string_to_uint(PORT)];
-  }
+	inline void signal_to_stop(const char *PORT) {
+		change_status(PORT, port::Status::SIGNALED);
+	}
 
-  mutex &get_start(const char *PORT) {
-    return *this->start[_compile_time::string_to_uint(PORT)];
-  }
-
-  mutex &get_end(const char *PORT) {
-    return *this->dead[_compile_time::string_to_uint(PORT)];
-  }
-
-  void reset(const char *PORT) {
-    this->get_start_ptr(PORT) = nullptr;
-    this->get_end_ptr(PORT) = nullptr;
-  }
-
-  std::shared_ptr<std::optional<size_t>>& get_number_of_requests_ptr(const char *PORT) {
-    return this->number_of_requests[_compile_time::string_to_uint(PORT)];
-  }
-
+	inline std::shared_ptr<std::optional<size_t>> requests_left(const char* PORT) {
+		return ports[number(PORT)].number_of_requests;
+	}
 private:
-
-  std::shared_ptr<mutex>& get_start_ptr(const char *PORT) {
-    return this->start[_compile_time::string_to_uint(PORT)];
-  }
-
-  std::shared_ptr<mutex>& get_end_ptr(const char *PORT) {
-    return this->dead[_compile_time::string_to_uint(PORT)];
-  }
-
-  void lock_working(const char *PORT) {
-    this->start[_compile_time::string_to_uint(PORT)]->lock();
-  }
-
-  void unlock_working(const char *PORT) {
-    this->start[_compile_time::string_to_uint(PORT)]->unlock();
-  }
-
-  void lock_dead(const char *PORT) {
-    this->dead[_compile_time::string_to_uint(PORT)]->lock();
-  }
-
-  void unlock_dead(const char *PORT) {
-    this->dead[_compile_time::string_to_uint(PORT)]->unlock();
-  }
+	static constexpr size_t number(const char* PORT) {
+		return _compile_time::string_to_uint(PORT);
+	}
 };
 } // namespace webframe::utils

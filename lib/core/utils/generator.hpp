@@ -1,16 +1,19 @@
 #pragma once
 
-#ifdef __CLANG__
+#ifdef __clang__
 #include <experimental/coroutine>
-namespace coro_std {
-    using namespace std::experimental;
-}
 #else
 #include <coroutine>
-namespace coro_std {
-    using namespace std;
-}
 #endif
+
+namespace coro_std {
+    #ifdef __clang__
+    using namespace std::experimental;
+    #else
+    using namespace std;
+    #endif
+}
+
 namespace webframe::utils {
 
     template<typename T>

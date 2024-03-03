@@ -104,7 +104,7 @@ namespace webframe::core {
 		void handler(SOCKET client, const std::function<void()>& callback);
 		bool initialized_sockets();
 		SOCKET get_listener(const char* PORT);
-		utils::generator<SOCKET> gen_clients(SOCKET listener, const char* PORT, std::shared_ptr<std::optional<size_t>> requests);
+		utils::generator<SOCKET> gen_clients(SOCKET listener, const std::string PORT, std::function<void()> on_end);
 	public:
 		application& run(const char* PORT, const size_t cores, std::optional<size_t> requests = std::nullopt);
 

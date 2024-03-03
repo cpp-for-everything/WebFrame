@@ -348,18 +348,20 @@ namespace webframe::core {
             this->errors << "(main) getaddrinfo error: " << gai_strerror(status) << "\n";
             application::port_status.alert_start(PORT);
             application::port_status.alert_end(PORT);
+            application::port_status.wait_end(PORT);
             throw exceptions::unable_to_retrieve_address();
         }
 
         // Create Socket and check if error occured afterwards
         listener = socket(res->ai_family, res->ai_socktype,
                             res->ai_protocol);
-        if (listener == (SOCKET)-1) {
+        if (listener == INVALID_SOCKET) {
             this->errors
                 << "(main) socket error: " << gai_strerror(status)
                 << "\n";
             application::port_status.alert_start(PORT);
             application::port_status.alert_end(PORT);
+            application::port_status.wait_end(PORT);
             throw exceptions::socket_not_created();
         }
 
@@ -372,6 +374,7 @@ namespace webframe::core {
                             << gai_strerror(status) << "\n";
             application::port_status.alert_start(PORT);
             application::port_status.alert_end(PORT);
+            application::port_status.wait_end(PORT);
             throw exceptions::unable_to_bind_socket();
         }
 
@@ -382,15 +385,18 @@ namespace webframe::core {
                 << "\n";
             application::port_status.alert_start(PORT);
             application::port_status.alert_end(PORT);
+            application::port_status.wait_end(PORT);
             throw exceptions::unable_to_bind_socket();
         }
 
+        //status = nonblock_config(listener);
         status = nonblock_config(listener);
         if (status < 0) {
             this->errors << "(main) nonblocking config error: "
                             << gai_strerror(status) << "\n";
             application::port_status.alert_start(PORT);
             application::port_status.alert_end(PORT);
+            application::port_status.wait_end(PORT);
             throw exceptions::socket_not_created();
         }
 
@@ -399,78 +405,65 @@ namespace webframe::core {
         return listener;
     }
     
-    utils::generator<SOCKET> application::gen_clients(SOCKET listener, const char* PORT, std::shared_ptr<std::optional<size_t>> requests) {
-        bool started = false;
-        while ((!requests->has_value() || requests->value() > 0) && !this->port_status.is_over(PORT)) {
-            // Check if abort was requested
-            if (application::port_status.is_over(PORT)) {
-                break;
-            }
-
-            // Alert waiting for the first request
-            if (!started) {
-                application::port_status.alert_start(PORT);
-                started = true;
-            }
-
+    utils::generator<SOCKET> application::gen_clients(SOCKET listener, const std::string PORT, std::function<void()> on_end) {
+        std::mutex m;
+        while ((!application::port_status.get_remaining_number_of_requests(PORT.c_str()).has_value() || application::port_status.get_remaining_number_of_requests(PORT.c_str()).value() > 0)) {
+            std::lock_guard<std::mutex> lk(m);
             // Accept a request
-            SOCKET client = static_cast<SOCKET>(-1);
-            client = ACCEPT(listener, NULL, NULL);
-            if (client == (SOCKET)-1) {
+            SOCKET client = ACCEPT(listener, NULL, NULL);
+            if (client == INVALID_SOCKET) {
                 continue;
             }
-            this->logger << "(main) Client found: " << client << "\n"; 
+            this->logger << "(thread " << std::this_thread::get_id() << ") Client invalid: " << (client == INVALID_SOCKET) << "\n"; 
+            this->logger << "(thread " << std::this_thread::get_id() << ") Client found: " << client << "\n"; 
             
             // Check if the socket is valid
             {
                 struct timeval selTimeout;
-                selTimeout.tv_sec = 2;
+                selTimeout.tv_sec = 1;
                 selTimeout.tv_usec = 0;
                 fd_set readSet;
                 FD_ZERO(&readSet);
                 FD_SET(client + 1, &readSet);
                 FD_SET(client, &readSet);
 
-                int status = SELECT(client + 1, &readSet, nullptr,
-                                nullptr, &selTimeout);
-                this->logger << "(main) SELECT status is " <<
-                status << "\n";
+                int status = SELECT(client + 1, &readSet, nullptr, nullptr, &selTimeout);
+                this->logger << "(thread " << std::this_thread::get_id() << ") SELECT status is " << status << "\n";
                 if (status < 0) {
-                    this->errors << "(main) INVALID SOCKET: " <<
-                    client << " was skipped (" << status <<
-                    ")\n";
+                    this->errors << "(thread " << std::this_thread::get_id() << ") INVALID SOCKET: " << client << " was skipped (" << status << ")\n";
                     continue;
                 }
 
-                this->logger << "(main) Requestor " << client <<
-                " is still valid\n";
-            }
-            co_yield client;
-        }
+                this->logger << "(thread " << std::this_thread::get_id() << ") Client " << client << " vs invalid socket " << INVALID_SOCKET << "\n";
+                this->logger << "(thread " << std::this_thread::get_id() << ") Requestor " << client <<" is still valid\n";
 
-        if (!application::port_status.is_over(PORT)) {
-            application::port_status.alert_end(PORT);
+                co_yield client;
+            }
         }
-#ifdef _WIN32
-        WSACleanup();
-#endif
+        on_end();
     }
 
     application& application::run(const char* PORT, const size_t cores, std::optional<size_t> requests) {
-        application::port_status.initiate(PORT);
+        application::port_status.initiate(PORT, requests);
         if (!initialized_sockets()) {
             application::port_status.alert_start(PORT);
             application::port_status.alert_end(PORT);
+            application::port_status.wait_end(PORT);
             return *this;
         }
         this->logger << "(main) Startup done\n";
         SOCKET listener = get_listener(PORT);
         this->logger << "(main) Listener setup " << listener << "\n";
-        auto shared_requests = std::make_shared<std::optional<size_t>>(requests);
-        auto get_clients = gen_clients(listener, PORT, shared_requests);
+        auto get_clients = gen_clients(listener, std::string(PORT), [port = std::string(PORT)]() -> void {
+            application::port_status.wait_end(port.c_str());
+        #ifdef _WIN32
+            WSACleanup();
+        #endif
+        });
         const size_t threads = my_min(cores, requests.value_or(cores));
         
         thread_pool pool = thread_pool(threads, std::make_shared<utils::generator<SOCKET>>(std::move(get_clients)), [this](std::shared_ptr<utils::generator<SOCKET>> get_client, std::shared_ptr<std::optional<size_t>> requests) {
+            this->logger << "(thread " << std::this_thread::get_id() << ") Thread started\n"; 
             do {
                 SOCKET client = get_client->getNextValue();
                 this->logger << "(thread " << std::this_thread::get_id() << ") Client found: " << client << "\n"; 
@@ -483,7 +476,7 @@ namespace webframe::core {
                         this->logger << "(thread " << std::this_thread::get_id() << ") (callback) Requests: " << requests->value() << "\n";
                     });
             } while(true);
-        }, shared_requests);
+        }, application::port_status.get_number_of_requests_ptr(PORT));
         this->logger << "(main) Thread pool generated\n";
         pool.start();
         this->logger << "(main) Thread pool started\n";

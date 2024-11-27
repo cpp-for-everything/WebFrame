@@ -91,19 +91,19 @@ jobs:
         shell: bash
         run: |
           python -m pip install flask;
-          python benchmark/contestants/server.py &
+          python tests/benchmark/server.py &
       - name: Install Express & Run 🔧
         if: startsWith(matrix.server, 'node')
         shell: bash
         run: |
           npm install express;
-          node benchmark/contestants/server.js &
+          node tests/benchmark/server.js &
       - name: Run benchmark 🚀
         shell: bash
         run: |      
           cd benchmark;
           mkdir tmp;
-          bash benchmarker.sh 8888 ${{ matrix.server }};
+          bash ../.github/workflows/tools/benchmarker.sh 8888 ${{ matrix.server }};
       - name: Upload Report 🚀
         uses: actions/upload-artifact@v1
         with:
@@ -128,13 +128,6 @@ jobs:
           paste -d "," benchmark_*/test1.time.csv > benchmark/report/test1.time.csv;
           paste -d "," benchmark_*/test2.curl.csv > benchmark/report/test2.curl.csv;
           paste -d "," benchmark_*/test2.time.csv > benchmark/report/test2.time.csv;
-          cd benchmark;
-          chmod +x ./csv2html.sh;
-          ./csv2html.sh report/test1.curl.csv "Test 1 / CURL total time" > report/test1.curl.html
-          ./csv2html.sh report/test1.time.csv "Test 1 / CURL time %e" > report/test1.time.html
-          ./csv2html.sh report/test2.curl.csv "Test 2 / CURL total time" > report/test2.curl.html
-          ./csv2html.sh report/test2.time.csv "Test 2 / CURL time %e" > report/test2.time.html
-          cat report/*.*.html > report/index.html 
       - name: Upload Report 🚀
         uses: actions/upload-artifact@v1
         with:

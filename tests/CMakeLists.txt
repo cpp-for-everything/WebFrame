@@ -1,10 +1,24 @@
 cmake_minimum_required(VERSION 3.14)
 
-add_subdirectory(Catch2)
-set_target_properties(Catch2 PROPERTIES COMPILE_FLAGS ${DEPENDANCES_WARNING_LEVEL})
+if(RUN_TESTS)
+    add_executable(WebFrame_IntegrationTests integration_tests/main.cpp)
+    target_include_directories(WebFrame_IntegrationTests PUBLIC "${PROJECT_SOURCE_DIR}/tests")
+    target_link_libraries(WebFrame_IntegrationTests PUBLIC Core Catch2::Catch2)
 
-add_executable(Core-Tests main.cpp)
-target_include_directories(Core-Tests PUBLIC "${PROJECT_SOURCE_DIR}/tests")
-target_link_libraries(Core-Tests PUBLIC Core Catch2::Catch2)
+    add_test(NAME WebFrame_IntegrationTests COMMAND WebFrame_IntegrationTests)
+endif()
 
-add_test(NAME Webframe-Core-Tests COMMAND Core-Tests)
+if(BENCHMARKS)
+    # Generate example source code
+    add_executable(WebFrame_Benchmark_Volatile benchmark/server_volatile.cpp)
+    target_link_libraries(WebFrame_Benchmark_Volatile PUBLIC Core)
+    target_include_directories(WebFrame_Benchmark_Volatile PUBLIC
+        "${PROJECT_BINARY_DIR}"
+    )
+
+    add_executable(WebFrame_Benchmark_Atomic benchmark/server_atomic.cpp)
+    target_link_libraries(WebFrame_Benchmark_Atomic PUBLIC Core)
+    target_include_directories(WebFrame_Benchmark_Atomic PUBLIC
+        "${PROJECT_BINARY_DIR}"
+    )
+endif()

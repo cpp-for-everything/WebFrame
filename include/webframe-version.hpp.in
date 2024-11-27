@@ -1,0 +1,10 @@
+#define WEBFRAME_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define WEBFRAME_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define WEBFRAME_VERSION_PATCH @PROJECT_VERSION_PATCH@
+
+namespace webframe
+{
+    static constexpr size_t major_version = @PROJECT_VERSION_MAJOR@;
+    static constexpr size_t minor_version = @PROJECT_VERSION_MINOR@;
+    static constexpr size_t patch_version = @PROJECT_VERSION_PATCH@;
+}

@@ -1060,8 +1060,8 @@ FILTER_SOURCE_PATTERNS =
 # is part of the input, its contents will be placed on the main page
 # (index.html). This can be useful if you have a project on for instance GitHub
 # and want to reuse the introduction page also for the doxygen output.
-INPUT += mainpage.dox
-# USE_MDFILE_AS_MAINPAGE = README.md
+# INPUT += mainpage.dox
+USE_MDFILE_AS_MAINPAGE = README.md
 
 #---------------------------------------------------------------------------
 # Configuration options related to source browsing

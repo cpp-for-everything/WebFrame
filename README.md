@@ -6,13 +6,18 @@
 | Compiler version  | Minimum C++ standard required |
 |:-----------------:|:-----------------------------:|
 | GCC, Clang, MSVC  | -std=c++2a _or_ -std=c++20    |
+
 # Testing
+
 ## Cppcheck - static code analysis
 Check the static code analysis of the project [here](https://cpp-for-everything.github.io/WebFrame/codeql_report/).
+
 ## Performance
 Check the performance check of the project [here](https://cpp-for-everything.github.io/WebFrame/benchmark/).
+
 ## Code documentation
 Check the Doxygen documentation of the library [here](https://cpp-for-everything.github.io/WebFrame/docs/).
+
 # How to use
 
 1. Make sure to include the library
@@ -218,8 +223,9 @@ Check the Doxygen documentation of the library [here](https://cpp-for-everything
         ```
 
 Check [example/](https://github.com/cpp-for-everything/WebFrame/blob/master/example) for more information.
-# Additional info
-- Currently working on setting up ![CMake](https://img.shields.io/badge/CMake-%23008FBA.svg?&logo=cmake&logoColor=while)
 
-# Socials
-[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/alex-tsvetanov/)
+# License
+This project is licensed under the GNU General Public License version 3 (GPLv3) for non-commercial usage. See [LICENSE](LICENSE) for details.
+
+# Credits
+Developed by Alex Tsvetanov ([![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/alex-tsvetanov/)).

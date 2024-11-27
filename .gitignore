@@ -1,16 +1,1 @@
-.vscode/
-*.exe
-**/*.exe
-buffer.txt
-log.txt
-curl.txt
-lib/Jinja2Cpp/**
-cppcheck*.*
-check_report.xml
-node_modules/
-bin/
-benchmark/tmp/
-package-lock.json
 build/
-benchmark/benchmark.sh
-debug.log

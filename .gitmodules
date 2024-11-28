@@ -1,12 +1,12 @@
-[submodule "external/inja"]
-	path = external/inja
+[submodule "Inja"]
+	path = third-party/inja
 	url = https://github.com/pantor/inja.git
-	branch = v3.4.0
-[submodule "external/url-matcher"]
-	path = external/url-matcher
+	branch = main
+[submodule "URL Matcher"]
+	path = third-party/url-matcher
 	url = https://github.com/cpp-for-everything/RegexMatcher.git
 	branch = main
-[submodule "external/Catch2"]
-	path = external/Catch2
+[submodule "Catch2"]
+	path = third-party/Catch2
 	url = https://github.com/catchorg/Catch2
-	branch = v3.5.2
+	branch = devel

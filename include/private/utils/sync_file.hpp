@@ -7,10 +7,11 @@
 
 #pragma once
 
-#include <cstring>
 #include <iomanip>
-#include <shared_mutex>
 #include <string>
+#include <iostream>
+#include <mutex>
+#include <sstream>
 
 namespace webframe::utils {
 	/**
@@ -18,94 +19,40 @@ namespace webframe::utils {
 	 *  @details This type handle multithreading write requests to a given output
 	 *stream (inc. files)
 	 ***********************************************/
-	class synchronized_file {
+
+	class SyncStream {
 	public:
-		explicit synchronized_file(std::basic_ostream<char>* path) { _path = path; }
+		SyncStream(std::ostream* os = nullptr) : stream(os) {}
+		void set(std::ostream* os = nullptr) { stream = os; }
+		SyncStream(SyncStream&&) = default;
 
-		synchronized_file() : _path(nullptr) {}
-
-		synchronized_file& operator=(synchronized_file&& sf) {
-			_path = sf._path;
+		// Overloaded insertion operator
+		template <typename T>
+		SyncStream& operator<<(const T& value) {
+			std::lock_guard<std::mutex> lock(mtx);
+			if (stream == nullptr) return *this;
+			buffer << value;  // Write to the internal buffer
 			return *this;
 		}
 
-		template <typename T>
-		friend synchronized_file& operator<<(synchronized_file&, T);
+		// Special handling for std::endl
+		SyncStream& operator<<(std::ostream& (*manip)(std::ostream&)) {
+			std::lock_guard<std::mutex> lock(mtx);
+			if (stream == nullptr) return *this;
+			if (manip == static_cast<std::ostream& (*)(std::ostream&)>(std::endl)) {
+				(*stream) << buffer.str();  // Flush the internal buffer to the stream
+				buffer.str("");             // Clear the buffer
+				buffer.clear();             // Reset any error flags
+				(*stream) << manip;         // Apply the manipulator (flush)
+			} else if (manip != static_cast<std::ostream& (*)(std::ostream&)>(std::flush)) {
+				buffer << manip;  // Apply the manipulator
+			}
+			return *this;
+		}
 
-	protected:
-		std::ostream* _path;
-		mutable std::shared_mutex _writerMutex;
+	private:
+		std::ostream* stream;       // Reference to the output stream
+		std::ostringstream buffer;  // Thread-local buffer
+		std::mutex mtx;             // Mutex for synchronization
 	};
-
-	class warning_synchronized_file : public synchronized_file {
-	public:
-		explicit warning_synchronized_file(std::basic_ostream<char>* path) : synchronized_file(path) {}
-
-		warning_synchronized_file() : synchronized_file() {}
-
-		template <typename T>
-		friend warning_synchronized_file& operator<<(warning_synchronized_file&, T);
-	};
-	class info_synchronized_file : public synchronized_file {
-	public:
-		explicit info_synchronized_file(std::basic_ostream<char>* path) : synchronized_file(path) {}
-
-		info_synchronized_file() : synchronized_file() {}
-
-		template <typename T>
-		friend info_synchronized_file& operator<<(info_synchronized_file&, T);
-	};
-	class error_synchronized_file : public synchronized_file {
-	public:
-		explicit error_synchronized_file(std::basic_ostream<char>* path) : synchronized_file(path) {}
-
-		error_synchronized_file() : synchronized_file() {}
-
-		template <typename T>
-		friend error_synchronized_file& operator<<(error_synchronized_file&, T);
-	};
-
-	template <typename T>
-	synchronized_file& operator<<(synchronized_file& file, T val) {
-		if (file._path == nullptr) return file;
-		const std::lock_guard<std::shared_mutex> locker(file._writerMutex);
-
-		(*file._path) << val;
-		(*file._path).flush();
-
-		return file;
-	}
-
-	template <typename T>
-	info_synchronized_file& operator<<(info_synchronized_file& file, T val) {
-		if (file._path == nullptr) return file;
-		const std::lock_guard<std::shared_mutex> locker(file._writerMutex);
-
-		(*file._path) << val;
-		(*file._path).flush();
-
-		return file;
-	}
-
-	template <typename T>
-	warning_synchronized_file& operator<<(warning_synchronized_file& file, T val) {
-		if (file._path == nullptr) return file;
-		const std::lock_guard<std::shared_mutex> locker(file._writerMutex);
-
-		(*file._path) << val;
-		(*file._path).flush();
-
-		return file;
-	}
-
-	template <typename T>
-	error_synchronized_file& operator<<(error_synchronized_file& file, T val) {
-		if (file._path == nullptr) return file;
-		const std::lock_guard<std::shared_mutex> locker(file._writerMutex);
-
-		(*file._path) << val;
-		(*file._path).flush();
-
-		return file;
-	}
 }  // namespace webframe::utils

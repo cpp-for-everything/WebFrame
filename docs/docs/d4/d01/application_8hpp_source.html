@@ -108,7 +108,7 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="../../d1/d67/classwebframe_1_1core_1_1application.html#aea6ba1c8d8ccdd13c67cc148e4f56990">   35</a></span>&#160;        std::vector&lt;executor_data&gt; <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#aea6ba1c8d8ccdd13c67cc148e4f56990">executors</a>;</div>
 <div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="../../d1/d67/classwebframe_1_1core_1_1application.html#af3602286af24503ebc7722da8cbdc8df">   36</a></span>&#160;        <a class="code" href="../../d9/d58/classwebframe_1_1core_1_1_regex_matcher.html">RegexMatcher&lt;executor_data&gt;</a> <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#af3602286af24503ebc7722da8cbdc8df">routes</a>;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#ifdef USE_INJA</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#ifdef WITH_INJA</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        std::string template_dir;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        inja::Environment env;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif</span></div>
@@ -140,7 +140,7 @@ $(function() {
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html">application</a>&amp; <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#aa2ac614849283651e82118c49cb820d4">set_static</a>(<span class="keyword">const</span> std::string&amp; path, <span class="keyword">const</span> std::string&amp; alias);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#ifdef USE_INJA</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#ifdef WITH_INJA</span></div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html">application</a>&amp; set_templates(<span class="keyword">const</span> std::string&amp; path);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="../../d4/db2/classwebframe_1_1core_1_1response.html">response</a> render(std::string path, inja::json params = {});</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif</span></div>

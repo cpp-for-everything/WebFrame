@@ -5,6 +5,8 @@
  *  @date   2022-03-07
  ***********************************************/
 
+#pragma once
+
 #include <functional>
 #include <type_traits>
 

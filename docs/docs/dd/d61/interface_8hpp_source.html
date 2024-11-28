@@ -128,7 +128,7 @@ $(function() {
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  }</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#ifdef USE_INJA</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#ifdef WITH_INJA</span></div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keyword">inline</span> <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html">application</a> &amp;set_templates(<span class="keyword">const</span> std::string &amp;path) {</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#a005f5cd9aa5ca7200db5f0dc54c3e69a">app</a>-&gt;set_templates(path);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
@@ -138,7 +138,7 @@ $(function() {
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#a005f5cd9aa5ca7200db5f0dc54c3e69a">app</a>-&gt;<a class="code" href="../../d8/df9/classwebframe_1_1core_1_1__application.html#a20d9a535626bae279893454713e128db">get_file</a>(path);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  }</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#ifdef USE_INJA</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#ifdef WITH_INJA</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keyword">inline</span> <a class="code" href="../../d4/db2/classwebframe_1_1core_1_1response.html">response</a> render(std::string path, inja::json params = {}) {</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#a005f5cd9aa5ca7200db5f0dc54c3e69a">app</a>-&gt;render(path, params);</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  }</div>

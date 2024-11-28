@@ -1,5 +1,9 @@
 {
-    "clang-format.executable": "clang-format",
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.default.cppStandard": "c++20",
+    "C_Cpp.default.cStandard": "c17",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "window.zoomLevel": 1,
     "files.associations": {
         "algorithm": "cpp",
         "array": "cpp",
@@ -87,6 +91,17 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xtree": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "string_view": "cpp"
     },
+    "editor.formatOnSave": true,
+    "[cpp]": {
+        "editor.defaultFormatter": "coder-of-worlds.env-var-clang-format"
+    },
+    "[c]": {
+        "editor.defaultFormatter": "coder-of-worlds.env-var-clang-format"
+    },
+    "clang-format.style": "${workspaceFolder}/.clang-format",
+    "clang-format.fallbackStyle": "none",
+    "clang-format.language.cpp.style": "file:${workspaceFolder}/.clang-format"
 }

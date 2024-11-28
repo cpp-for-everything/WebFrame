@@ -28,23 +28,23 @@
 
 #include <webframe-version.hpp>
 #include <c/host.h>
-#include "utils/regex_matcher_wrapper.hpp"
+#include <utils/regex_matcher_wrapper.hpp>
 
-#ifdef USE_INJA
+#ifdef WITH_INJA
 #include <inja/inja.hpp>
 #endif
 
-#include "http/processing/loading_state.hpp"
-#include "http/processing/path_variables.hpp"
-#include "http/processing/request.hpp"
-#include "http/request/method.hpp"
-#include "http/response/response.hpp"
-#include "http/response/status_line.hpp"
-#include "utils/generator.hpp"
-#include "utils/lambda2function.hpp"
-#include "utils/respond_manager.hpp"
-#include "utils/server_status.hpp"
-#include "utils/sync_file.hpp"
+#include <http/processing/loading_state.hpp>
+#include <http/processing/path_variables.hpp>
+#include <http/processing/request.hpp>
+#include <http/request/method.hpp>
+#include <http/response/response.hpp>
+#include <http/response/status_line.hpp>
+#include <utils/generator.hpp>
+#include <utils/lambda2function.hpp>
+#include <utils/respond_manager.hpp>
+#include <utils/server_status.hpp>
+#include <utils/sync_file.hpp>
 
 using namespace std::literals::string_literals;
 
@@ -100,6 +100,6 @@ namespace webframe::core {
 	class application;
 }  // namespace webframe::core
 
-#include "internal/router/router.hpp"
-#include "internal/threads/threads.hpp"
-#include "internal/application/application.hpp"
+#include <internal/router/router.hpp>
+#include <internal/threads/threads.hpp>
+#include <internal/application/application.hpp>

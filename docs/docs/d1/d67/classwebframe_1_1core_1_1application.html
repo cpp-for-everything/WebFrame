@@ -194,7 +194,7 @@ Friends</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="../../df/d7b/application_8cpp_source.html#l00004">4</a> of file <a class="el" href="../../df/d7b/application_8cpp_source.html">application.cpp</a>.</p>
 <div class="fragment"><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;                             : <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#af3602286af24503ebc7722da8cbdc8df">routes</a>(&amp;<a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#aea6ba1c8d8ccdd13c67cc148e4f56990">executors</a>) {</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifdef USE_INJA</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifdef WITH_INJA</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;        template_dir = <span class="stringliteral">&quot;.&quot;</span>;</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;        <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#a3ab5f69bfa493a0b1ef01b4f43525a55">performancer</a> = utils::synchronized_file(&amp;std::clog);</div>

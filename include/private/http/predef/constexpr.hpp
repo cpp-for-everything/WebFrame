@@ -7352,12 +7352,11 @@ namespace webframe {
 
 		template <std::size_t N>
 		constexpr var_index_t<N> var_index(std::size_t I) {
-			constexpr auto table = []<std::size_t... Is>(std::index_sequence<Is...>)->std::array<var_index_t<N>, N> {
+			constexpr auto table = []<std::size_t... Is>(std::index_sequence<Is...>) -> std::array<var_index_t<N>, N> {
 				return {
 				    var_index_t<N>(constant_v<Is>)...,
 				};
-			}
-			(std::make_index_sequence<N>{});
+			}(std::make_index_sequence<N>{});
 			return table[I];
 		}
 	}  // namespace _compile_time

@@ -1,4 +1,4 @@
-#include <core/core.hpp>
+#include <webframe.hpp>
 #include <iostream>
 #include <thread>
 
@@ -9,7 +9,7 @@ int main([[maybe_unused]] int args, [[maybe_unused]] char** argv) {
 	webframe::core::application app;
 
 	// setup
-#ifdef USE_INJA
+#ifdef WITH_INJA
 	app.set_templates("./example/Project/static/templates");
 #endif
 	app.extend_with(home);

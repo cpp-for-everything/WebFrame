@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include <atomic>
-#include <core/core.hpp>
+#include <webframe.hpp>
 #include <iostream>
 #include <sstream>
 
@@ -10,7 +10,7 @@ int main() {
 	std::atomic<int> pass{0};
 	webframe::core::application app;
 	app.set_static("./example/Sample/static", "/static")
-#ifdef USE_INJA
+#ifdef WITH_INJA
 	    .set_templates("./example/Sample/static/templates")
 #endif
 	    .handle("404", [&](const std::string& path) { return "Error 404: " + path + " was not found."; })
@@ -21,11 +21,8 @@ int main() {
 		                                           {{"Content-Type", "text/html; charset=utf-8"}},
 		                                           "<h1>Hello, World!</h1>");
 	           })
-#ifdef USE_INJA
-	    .route("/{text}",
-	           [&](const std::string& user) {
-		           return app.render("template.html", {{"username", user}});
-	           })
+#ifdef WITH_INJA
+	    .route("/{text}", [&](const std::string& user) { return app.render("template.html", {{"username", user}}); })
 #endif
 	    .route("/favicon.ico", [&]() { return ""; })
 	    .route("/{number}",

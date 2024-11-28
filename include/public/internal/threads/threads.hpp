@@ -3,8 +3,8 @@
 #include <memory>
 #include <optional>
 
-#include "../../c/host.h"
-#include "../../utils/generator.hpp"
+#include <c/host.h>
+#include <utils/generator.hpp>
 
 namespace webframe::core {
 	struct thread_pool {

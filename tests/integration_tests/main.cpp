@@ -10,7 +10,7 @@ using Catch::Matchers::EndsWith;
 using Catch::Matchers::Equals;
 using Catch::Matchers::StartsWith;
 
-#include <core/core.hpp>
+#include <webframe.hpp>
 
 #include "response_of.hpp"
 

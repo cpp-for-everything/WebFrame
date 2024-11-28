@@ -23,7 +23,7 @@ Check the Doxygen documentation of the library [here](https://cpp-for-everything
 1. Make sure to include the library
 
     ```cpp
-    #include <core/core.hpp>
+    #include <webframe.hpp>
     ```
 
 2. Initiate your Web application

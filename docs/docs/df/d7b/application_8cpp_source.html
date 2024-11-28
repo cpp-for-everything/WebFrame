@@ -75,7 +75,7 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../d2/dab/namespacewebframe_1_1core.html">webframe::core</a> {</div>
 <div class="line"><a name="l00004"></a><span class="lineno"><a class="line" href="../../d1/d67/classwebframe_1_1core_1_1application.html#a2c638beafed32591c385a706ee806ec6">    4</a></span>&#160;    <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#a2c638beafed32591c385a706ee806ec6">application::application</a>() : routes(&amp;executors) {</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifdef USE_INJA</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifdef WITH_INJA</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;        template_dir = <span class="stringliteral">&quot;.&quot;</span>;</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;        <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#a3ab5f69bfa493a0b1ef01b4f43525a55">performancer</a> = <a class="code" href="../../d0/d28/classwebframe_1_1utils_1_1synchronized__file.html">utils::synchronized_file</a>(&amp;std::clog);</div>
@@ -247,7 +247,7 @@ $(function() {
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
 <div class="line"><a name="l00175"></a><span class="lineno"><a class="line" href="../../d1/d67/classwebframe_1_1core_1_1application.html#a87badddf5e63232d3c8cd85ae24bfcf1">  175</a></span>&#160;    <a class="code" href="../../d4/db2/classwebframe_1_1core_1_1response.html">response</a> <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#adc1a49759f3c3f45f7fecd8da8066c0c">application::respond</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* p, <span class="keyword">const</span> std::string&amp; http) { <span class="keywordflow">return</span> <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html#adc1a49759f3c3f45f7fecd8da8066c0c">respond</a>(std::string(p), http); }</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor">#ifdef USE_INJA</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor">#ifdef WITH_INJA</span></div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <a class="code" href="../../d1/d67/classwebframe_1_1core_1_1application.html">application</a>&amp; application::set_templates(<span class="keyword">const</span> std::string&amp; path) {</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        this-&gt;template_dir = path;</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>

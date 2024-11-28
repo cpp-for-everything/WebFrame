@@ -191,9 +191,9 @@ typedef long int int64;
 #define FFLUSH(x) fflush(x)
 #define FILENO(s) fileno(s)
 #define FOPEN(x, y) fopen(x, y)
-//#define FREAD(a,b,c,d)      fread(a, b, c, d)
+// #define FREAD(a,b,c,d)      fread(a, b, c, d)
 #define FSTAT(s, st) fstat(FILENO(s), st)
-//#define FWRITE(a,b,c,d)     fwrite(a, b, c, d)
+// #define FWRITE(a,b,c,d)     fwrite(a, b, c, d)
 #define STAT_BLK_SIZE(x) ((x).st_blksize)
 
 /*---------------------------------------------------------------------------*/

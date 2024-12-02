@@ -14,5 +14,7 @@ if(WITH_INJA)
 endif()
 
 add_subdirectory(url-matcher)
+set(CMAKE_PREFIX_PATH ${CONFIG_INSTALL_DIR})
+find_package(RegexMatcher REQUIRED)
 set_target_properties(regexmatcher_core PROPERTIES COMPILE_FLAGS ${DEPENDANCES_WARNING_LEVEL})
 target_link_libraries(WebFrame_Library PUBLIC RegexMatcher::core)

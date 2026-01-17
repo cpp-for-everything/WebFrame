@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Coroute Performance Benchmarks</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+    h1 { color: #333; }
+    pre { background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    .timestamp { color: #666; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h1>Coroute v2 Performance Benchmarks</h1>
+  <p class="timestamp">Generated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")</p>
+  <p>Commit: <code>${GITHUB_SHA:0:7}</code></p>
+  <pre>
+=== Simple GET Benchmark ===
+Running 30s test @ http://localhost:8080/
+  4 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.11ms    1.26ms  13.89ms   86.63%
+    Req/Sec    28.59k     1.23k   36.59k    87.12%
+  3419132 requests in 30.05s, 435.44MB read
+Requests/sec: 113762.87
+Transfer/sec:     14.49MB
+
+=== Keep-Alive Benchmark ===
+Running 30s test @ http://localhost:8080/
+  4 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.32ms    1.70ms  21.03ms   87.33%
+    Req/Sec    27.89k     1.92k   40.35k    80.03%
+  3335768 requests in 30.09s, 424.82MB read
+Requests/sec: 110844.39
+Transfer/sec:     14.12MB
+
+=== Apache Bench Results ===
+This is ApacheBench, Version 2.3 <$Revision: 1903618 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+
+
+Server Software:        
+Server Hostname:        localhost
+Server Port:            8080
+
+Document Path:          /
+Document Length:        13 bytes
+
+Concurrency Level:      100
+Time taken for tests:   1.433 seconds
+Complete requests:      10000
+Failed requests:        0
+Keep-Alive requests:    0
+Total transferred:      970000 bytes
+HTML transferred:       130000 bytes
+Requests per second:    6977.17 [#/sec] (mean)
+Time per request:       14.332 [ms] (mean)
+Time per request:       0.143 [ms] (mean, across all concurrent requests)
+Transfer rate:          660.92 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    6   2.7      7      14
+Processing:     1    8   3.0      8      21
+Waiting:        0    6   3.2      6      16
+Total:          3   14   3.7     14      32
+
+Percentage of the requests served within a certain time (ms)
+  50%     14
+  66%     15
+  75%     16
+  80%     17
+  90%     20
+  95%     21
+  98%     23
+  99%     25
+ 100%     32 (longest request)
+  </pre>
+</body>
+</html>
